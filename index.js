@@ -1,5 +1,5 @@
 var dlevel=1;
-var levelItem = [35, 45, 50, 55, 60, 65];
+var levelItem = [35, 45, 50, 55, 60];
 var question;
 var answer;
 
