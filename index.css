@@ -62,6 +62,10 @@ html{
   display: flex;
 }
 
+#gameContainer{
+  display: none;
+}
+
 @media only screen and  (max-width:400px) {
   #mySuduko{
     width: 85%;

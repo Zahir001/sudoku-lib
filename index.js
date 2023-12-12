@@ -4,6 +4,9 @@ var question;
 var answer;
 var mistake;
 var reqNumber;
+var activeElm;
+var activeI;
+var activeJ;
 
 // Backend Logic
 
@@ -147,6 +150,11 @@ function shuffle(array) {
 
 // UI Logic
 
+function parseIndexFromID(elmId){
+  var text = elmId.replace('sudukoItem_','');
+  return [Array.from(text)[0], Array.from(text)[2]];
+}
+
 function refreshPressed() {
   loadSudukoUI();
 }
@@ -170,9 +178,7 @@ function loadSudukoUI() {
   for (let i = 0; i < 9; i++){
     for (let j = 0; j < 9; j++){
       var num = question[i][j].toString();
-      var isEditable = 'readonly';
       if (num == '0') {
-        isEditable = '';
         num = ''
       }
 
@@ -185,7 +191,7 @@ function loadSudukoUI() {
       }
 
       var elmId = 'sudukoItem_'+i+'_'+j;
-      sdk.innerHTML += '<input id="'+elmId+'" class="sudoku_child_item" type="tel" style="'+style+'" value="'+num+'" maxlength="1" oninput="numberTyped('+i+','+j+','+elmId+')" '+isEditable+' onclick="itemClicked('+i+','+j+','+elmId+')">';
+      sdk.innerHTML += '<input id="'+elmId+'" class="sudoku_child_item" type="tel" style="'+style+'" value="'+num+'" maxlength="1" readonly onclick="itemClicked('+i+','+j+','+elmId+')">';
     } 
   }
 
@@ -219,32 +225,41 @@ function updateBackgroundAndInputs(elm){
   buttonDiv.innerHTML = '';
 
   for (let i = 0; i < numInputs.length; i++) {
-    buttonDiv.innerHTML += '<button style="font-size: large;">'+(i+1)+'<div style="font-size: x-small;">'+numInputs[i]+'</div></button>';
+    var visibility = '';
+    if (numInputs[i] == 0){
+      visibility = 'hidden';
+    }
+    buttonDiv.innerHTML += '<button style="font-size: large; visibility:'+visibility+'" onclick="numberTyped('+(i+1)+')">'+(i+1)+'<div style="font-size: x-small;">'+numInputs[i]+'</div></button>';
   }
 }
 
 function itemClicked(i, j, elm){
-  // alert(""+i+" "+j+" "+elm.id+" "+elm.value); // sudukoItem_0_4
-
+  activeElm = elm;
+  activeI = i;
+  activeJ = j;
   updateBackgroundAndInputs(elm);
 }
 
-function numberTyped(i, j, elm){
-  var num = elm.value.match(/[1-9]/g); 
-  elm.value = num
-  if (isNaN(parseInt(num))) {
-    return;
-  } 
+function numberTyped(posV){
+  if (activeElm == null) {
+    return
+  }
+  var cId = parseIndexFromID(activeElm.id);
+  if (question[cId[0]][cId[1]] != 0) {
+    return
+  }
+
+  activeElm.value = posV;
   
-  if (answer[i][j] == elm.value) {
+  if (answer[activeI][activeJ] == activeElm.value) {
     // success
     reqNumber--;
-    elm.style.color = 'black';
+    activeElm.style.color = 'black';
     if(reqNumber==0){
       alert('congratulation!!! Retuning to main menu.');
       resetPressed();
     }
-    updateBackgroundAndInputs(elm);
+    updateBackgroundAndInputs(activeElm);
   } else {
     // fail
     mistake++;
@@ -254,6 +269,20 @@ function numberTyped(i, j, elm){
       alert('Maximum mistake limit reached. Refreshing Suduko !!!');
       refreshPressed();
     }
-    elm.style.color = 'red';
+    activeElm.style.color = 'red';
   }
+}
+
+function erasePressed() {
+  if (activeElm == null) {
+    return
+  }
+  var cId = parseIndexFromID(activeElm.id);
+  if (question[cId[0]][cId[1]] != 0) {
+    return
+  }
+
+  activeElm.value = ''
+
+  updateBackgroundAndInputs();
 }
