@@ -152,19 +152,13 @@ function refreshPressed() {
 }
 
 function resetPressed() {
-  document.getElementById('mistakeCount').style.display = 'none';
-  document.getElementById('playContainer').style.display = 'flex';
-  document.getElementById('reset').style.display = 'none';
-  document.getElementById('refresh').style.display = 'none';
-  document.getElementById('sudokuContainer').style.display = 'none';
+  document.getElementById('menuContainer').style.display = 'flex';
+  document.getElementById('gameContainer').style.display = 'none';
 }
 
 function loadSudukoUI() {
-  document.getElementById('mistakeCount').style.display = 'block';
-  document.getElementById('playContainer').style.display = 'none';
-  document.getElementById('reset').style.display = 'block';
-  document.getElementById('refresh').style.display = 'block';
-  document.getElementById('sudokuContainer').style.display = 'block';
+  document.getElementById('menuContainer').style.display = 'none';
+  document.getElementById('gameContainer').style.display = 'block';
 
   reqNumber = levelItem[dlevel-1];
 
