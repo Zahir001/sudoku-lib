@@ -1,0 +1,50 @@
+html{
+  background: darkcyan;
+}
+
+.sudoku {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 30%;
+  margin: auto;
+  padding: 54px 20px;
+  background: #307DF6;
+  border-radius: 10px;
+
+}
+
+.sudoku_child {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  place-items: center;
+  align-items: center;
+  background: #D7E1F4;
+  line-height: 36px;
+  border: 4px #d1d5fe inset;
+}
+
+.sudoku_child_item {
+  border-width: 2px;
+  border-color: #c7cbcb;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+}
+
+.sudokuContainer {
+  margin-top: 100px;
+}
+
+#mySuduko {
+  background-color: #307DF6;
+  padding: 36px 24px;
+  width: 36%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(9, 48px);
+  place-content: center;
+  border-radius: 12px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+  rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+  rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
