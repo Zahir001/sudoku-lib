@@ -9,9 +9,23 @@
 </head>
 <body>
 
+  <div id="playContainer">
+    <span>Select Difficulty Level: </span><select name="difficulty" id="difficultySelect">
+      <option value="1">Easy</option>
+      <option value="2">Medium</option>
+      <option value="3">Hard</option>
+      <option value="4">Extreme</option>
+      <option value="5">Extreme Pro</option>
+      <!-- <option value="6">Extreme Pro Max</option> -->
+    </select>
 
+    <button id="click" onclick="StartPlaying()">Play</button>
+  </div>
 
-  <div class="sudokuContainer">
+  <button id="refresh" onclick="refreshPressed()">Refresh</button>
+  <button id="reset" onclick="resetPressed()">Reset Level</button>
+
+  <div class="sudokuContainer" id="sudokuContainer">
     <div id="mySuduko"></div>
   </div>
 
