@@ -33,7 +33,6 @@ html{
 
 .sudokuContainer {
   margin-top: 100px;
-  display: none;
 }
 
 #mySuduko {
@@ -50,13 +49,6 @@ html{
   rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
-#reset{
-  display:none;
-}
-
-#refresh{
-  display:none;
-}
 /* home page css start here */
 .homeParent{
   display: flex;
@@ -68,6 +60,10 @@ html{
 }
 .homeParentChild{
   display: flex;
+}
+
+#gameContainer{
+  display: none;
 }
 
 @media only screen and  (max-width:400px) {

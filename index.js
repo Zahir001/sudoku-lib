@@ -1,9 +1,12 @@
 var dlevel=1;
-var levelItem = [35, 45, 50, 55, 60];
+var levelItem = [30, 35, 40, 45, 50];
 var question;
 var answer;
 var mistake;
 var reqNumber;
+var activeElm;
+var activeI;
+var activeJ;
 
 // Backend Logic
 
@@ -147,24 +150,23 @@ function shuffle(array) {
 
 // UI Logic
 
+function parseIndexFromID(elmId){
+  var text = elmId.replace('sudukoItem_','');
+  return [Array.from(text)[0], Array.from(text)[2]];
+}
+
 function refreshPressed() {
   loadSudukoUI();
 }
 
 function resetPressed() {
-  document.getElementById('mistakeCount').style.display = 'none';
-  document.getElementById('playContainer').style.display = 'flex';
-  document.getElementById('reset').style.display = 'none';
-  document.getElementById('refresh').style.display = 'none';
-  document.getElementById('sudokuContainer').style.display = 'none';
+  document.getElementById('menuContainer').style.display = 'flex';
+  document.getElementById('gameContainer').style.display = 'none';
 }
 
 function loadSudukoUI() {
-  document.getElementById('mistakeCount').style.display = 'block';
-  document.getElementById('playContainer').style.display = 'none';
-  document.getElementById('reset').style.display = 'block';
-  document.getElementById('refresh').style.display = 'block';
-  document.getElementById('sudokuContainer').style.display = 'block';
+  document.getElementById('menuContainer').style.display = 'none';
+  document.getElementById('gameContainer').style.display = 'block';
 
   reqNumber = levelItem[dlevel-1];
 
@@ -176,9 +178,7 @@ function loadSudukoUI() {
   for (let i = 0; i < 9; i++){
     for (let j = 0; j < 9; j++){
       var num = question[i][j].toString();
-      var isEditable = 'readonly';
       if (num == '0') {
-        isEditable = '';
         num = ''
       }
 
@@ -190,32 +190,103 @@ function loadSudukoUI() {
         style += 'border-bottom: 2px solid black;';
       }
 
-      var elmId = 'sudukoItem_'+i+'_'+j;//oninput="this.value = this.value.match(/[1-9]/g);"
-      sdk.innerHTML += '<input id="'+elmId+'" class="sudoku_child_item" type="tel" style="'+style+'" value="'+num+'" maxlength="1" oninput="numberTyped('+i+','+j+','+elmId+')" '+isEditable+' onclick="itemClicked('+i+','+j+','+elmId+')">';
+      var elmId = 'sudukoItem_'+i+'_'+j;
+      sdk.innerHTML += '<input id="'+elmId+'" class="sudoku_child_item" type="tel" style="'+style+'" value="'+num+'" maxlength="1" readonly onclick="itemClicked('+i+','+j+','+elmId+')">';
     } 
+  }
+
+  updateBackgroundAndInputs();
+}
+
+function updateBackgroundAndInputs(elm){
+  var numInputs = [9,9,9,9,9,9,9,9,9];
+
+  for (let i = 0; i < 9; i++){
+    for (let j = 0; j < 9; j++){
+      const currElm = document.getElementById('sudukoItem_'+i+'_'+j);
+      if (currElm.value != '') {
+        numInputs[parseInt(currElm.value) - 1] -= 1;
+      }
+      if (elm != null){
+        if(elm.value == currElm.value) {
+          if (elm.value == ''){
+            currElm.style.background = 'white';
+          } else {
+            currElm.style.background = 'lightskyblue';
+          }
+        } else {
+          currElm.style.background = 'white';
+        }
+      }
+    }
+  }
+
+  showHighlited();
+  
+  var buttonDiv = document.getElementById('buttonsContainer');
+  buttonDiv.innerHTML = '';
+
+  for (let i = 0; i < numInputs.length; i++) {
+    var visibility = '';
+    if (numInputs[i] == 0){
+      visibility = 'hidden';
+    }
+    buttonDiv.innerHTML += '<button style="font-size: large; visibility:'+visibility+'" onclick="numberTyped('+(i+1)+')">'+(i+1)+'<div style="font-size: x-small;">'+numInputs[i]+'</div></button>';
   }
 }
 
-function itemClicked(i, j, elmId){
-  // alert(""+i+" "+j+" "+elmId);
+function showHighlited() {
+  if (activeElm == null){
+    return
+  }
+  var cId = parseIndexFromID(activeElm.id);
+  for(let j = 0; j < 9; j++){
+    const currElm = document.getElementById('sudukoItem_'+cId[0]+'_'+j);
+    currElm.style.background = 'lightgray';
+  }
+
+  for(let i = 0; i < 9; i++){
+    const currElm = document.getElementById('sudukoItem_'+i+'_'+cId[1]);
+    currElm.style.background = 'lightgray';
+  }
+  var r = cId[0] / 3;
+  r = parseInt(r) * 3;
+  var c = cId[1] / 3;
+  c = parseInt(c) * 3;
+  for(let i = r; i <= r + 2; i++){
+    for(let j = c; j <= c + 2; j++){
+      const currElm = document.getElementById('sudukoItem_'+i+'_'+j);
+      currElm.style.background = 'lightgray';
+    }
+  }
+}
+function itemClicked(i, j, elm){
+  activeElm = elm;
+  activeI = i;
+  activeJ = j;
+  updateBackgroundAndInputs(elm);
 }
 
-function numberTyped(i, j, elmId){
-  // alert(elmId.value);
-  var num = elmId.value.match(/[1-9]/g); 
-  elmId.value = num
-  if (isNaN(parseInt(num))) {
-    return;
-  } 
+function numberTyped(posV){
+  if (activeElm == null) {
+    return
+  }
+  var cId = parseIndexFromID(activeElm.id);
+  if (question[cId[0]][cId[1]] != 0) {
+    return
+  }
+
+  activeElm.value = posV;
   
-  if (answer[i][j] == elmId.value) {
+  if (answer[activeI][activeJ] == activeElm.value) {
     // success
     reqNumber--;
-    elmId.style.color = 'black';
+    activeElm.style.color = 'black';
     if(reqNumber==0){
       alert('congratulation!!! Retuning to main menu.');
       resetPressed();
     }
+    updateBackgroundAndInputs(activeElm);
   } else {
     // fail
     mistake++;
@@ -225,7 +296,20 @@ function numberTyped(i, j, elmId){
       alert('Maximum mistake limit reached. Refreshing Suduko !!!');
       refreshPressed();
     }
-    
-    elmId.style.color = 'red';
+    activeElm.style.color = 'red';
   }
+}
+
+function erasePressed() {
+  if (activeElm == null) {
+    return
+  }
+  var cId = parseIndexFromID(activeElm.id);
+  if (question[cId[0]][cId[1]] != 0) {
+    return
+  }
+
+  activeElm.value = ''
+
+  updateBackgroundAndInputs();
 }
