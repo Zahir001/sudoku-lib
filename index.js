@@ -165,6 +165,8 @@ function resetPressed() {
 }
 
 function loadSudukoUI() {
+  activeElm = null
+  
   document.getElementById('menuContainer').style.display = 'none';
   document.getElementById('gameContainer').style.display = 'block';
 
