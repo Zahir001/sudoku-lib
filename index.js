@@ -1,5 +1,5 @@
 var dlevel=1;
-var levelItem = [35, 45, 50, 55, 60];
+var levelItem = [30, 35, 40, 45, 50];
 var question;
 var answer;
 var mistake;
@@ -184,32 +184,67 @@ function loadSudukoUI() {
         style += 'border-bottom: 2px solid black;';
       }
 
-      var elmId = 'sudukoItem_'+i+'_'+j;//oninput="this.value = this.value.match(/[1-9]/g);"
+      var elmId = 'sudukoItem_'+i+'_'+j;
       sdk.innerHTML += '<input id="'+elmId+'" class="sudoku_child_item" type="tel" style="'+style+'" value="'+num+'" maxlength="1" oninput="numberTyped('+i+','+j+','+elmId+')" '+isEditable+' onclick="itemClicked('+i+','+j+','+elmId+')">';
     } 
   }
+
+  updateBackgroundAndInputs();
 }
 
-function itemClicked(i, j, elmId){
-  // alert(""+i+" "+j+" "+elmId);
+function updateBackgroundAndInputs(elm){
+  var numInputs = [9,9,9,9,9,9,9,9,9];
+
+  for (let i = 0; i < 9; i++){
+    for (let j = 0; j < 9; j++){
+      const currElm = document.getElementById('sudukoItem_'+i+'_'+j);
+      if (currElm.value != '') {
+        numInputs[parseInt(currElm.value) - 1] -= 1;
+      }
+      if (elm != null){
+        if(elm.value == currElm.value) {
+          if (elm.value == ''){
+            currElm.style.background = 'white';
+          } else {
+            currElm.style.background = 'lightskyblue';
+          }
+        } else {
+          currElm.style.background = 'white';
+        }
+      }
+    }
+  }
+  
+  var buttonDiv = document.getElementById('buttonsContainer');
+  buttonDiv.innerHTML = '';
+
+  for (let i = 0; i < numInputs.length; i++) {
+    buttonDiv.innerHTML += '<button style="font-size: large;">'+(i+1)+'<div style="font-size: x-small;">'+numInputs[i]+'</div></button>';
+  }
 }
 
-function numberTyped(i, j, elmId){
-  // alert(elmId.value);
-  var num = elmId.value.match(/[1-9]/g); 
-  elmId.value = num
+function itemClicked(i, j, elm){
+  // alert(""+i+" "+j+" "+elm.id+" "+elm.value); // sudukoItem_0_4
+
+  updateBackgroundAndInputs(elm);
+}
+
+function numberTyped(i, j, elm){
+  var num = elm.value.match(/[1-9]/g); 
+  elm.value = num
   if (isNaN(parseInt(num))) {
     return;
   } 
   
-  if (answer[i][j] == elmId.value) {
+  if (answer[i][j] == elm.value) {
     // success
     reqNumber--;
-    elmId.style.color = 'black';
+    elm.style.color = 'black';
     if(reqNumber==0){
       alert('congratulation!!! Retuning to main menu.');
       resetPressed();
     }
+    updateBackgroundAndInputs(elm);
   } else {
     // fail
     mistake++;
@@ -219,7 +254,6 @@ function numberTyped(i, j, elmId){
       alert('Maximum mistake limit reached. Refreshing Suduko !!!');
       refreshPressed();
     }
-    
-    elmId.style.color = 'red';
+    elm.style.color = 'red';
   }
 }
