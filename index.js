@@ -220,6 +220,8 @@ function updateBackgroundAndInputs(elm){
       }
     }
   }
+
+  showHighlited();
   
   var buttonDiv = document.getElementById('buttonsContainer');
   buttonDiv.innerHTML = '';
@@ -233,6 +235,31 @@ function updateBackgroundAndInputs(elm){
   }
 }
 
+function showHighlited() {
+  if (activeElm == null){
+    return
+  }
+  var cId = parseIndexFromID(activeElm.id);
+  for(let j = 0; j < 9; j++){
+    const currElm = document.getElementById('sudukoItem_'+cId[0]+'_'+j);
+    currElm.style.background = 'lightgray';
+  }
+
+  for(let i = 0; i < 9; i++){
+    const currElm = document.getElementById('sudukoItem_'+i+'_'+cId[1]);
+    currElm.style.background = 'lightgray';
+  }
+  var r = cId[0] / 3;
+  r = parseInt(r) * 3;
+  var c = cId[1] / 3;
+  c = parseInt(c) * 3;
+  for(let i = r; i <= r + 2; i++){
+    for(let j = c; j <= c + 2; j++){
+      const currElm = document.getElementById('sudukoItem_'+i+'_'+j);
+      currElm.style.background = 'lightgray';
+    }
+  }
+}
 function itemClicked(i, j, elm){
   activeElm = elm;
   activeI = i;
