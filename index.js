@@ -222,9 +222,9 @@ function updateBackgroundAndInputs(elm){
   }
 
   showHighlited();
-  
+
   var buttonDiv = document.getElementById('buttonsContainer');
-  buttonDiv.innerHTML = '';
+  buttonDiv.innerHTML = '<br>';
 
   for (let i = 0; i < numInputs.length; i++) {
     var visibility = '';

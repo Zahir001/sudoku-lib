@@ -66,6 +66,9 @@ html{
   display: none;
 }
 
+#buttonsContainer{
+  text-align: center;
+}
 @media only screen and  (max-width:400px) {
   #mySuduko{
     width: 85%;
