@@ -3,6 +3,7 @@ var levelItem = [35, 45, 50, 55, 60];
 var question;
 var answer;
 var mistake;
+var reqNumber;
 
 // Backend Logic
 
@@ -165,6 +166,8 @@ function loadSudukoUI() {
   document.getElementById('refresh').style.display = 'block';
   document.getElementById('sudokuContainer').style.display = 'block';
 
+  reqNumber = levelItem[dlevel-1];
+
   mistake = 0;
   document.getElementById('mistakeCount').innerHTML = 'Mistake: '+mistake+' / 5';
 
@@ -207,7 +210,12 @@ function numberTyped(i, j, elmId){
   
   if (answer[i][j] == elmId.value) {
     // success
+    reqNumber--;
     elmId.style.color = 'black';
+    if(reqNumber==0){
+      alert('congratulation!!! Retuning to main menu.');
+      resetPressed();
+    }
   } else {
     // fail
     mistake++;
