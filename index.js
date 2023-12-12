@@ -2,13 +2,14 @@ var dlevel=1;
 var levelItem = [35, 45, 50, 55, 60];
 var question;
 var answer;
+var mistake;
 
 // Backend Logic
 
 function StartPlaying() {
   dlevel = document.getElementById("difficultySelect").value;
   myFunction(dlevel);
-
+  
   loadSudukoUI();
 }
 
@@ -150,17 +151,22 @@ function refreshPressed() {
 }
 
 function resetPressed() {
-  document.getElementById('playContainer').style.display = 'block';
+  document.getElementById('mistakeCount').style.display = 'none';
+  document.getElementById('playContainer').style.display = 'flex';
   document.getElementById('reset').style.display = 'none';
   document.getElementById('refresh').style.display = 'none';
   document.getElementById('sudokuContainer').style.display = 'none';
 }
 
 function loadSudukoUI() {
+  document.getElementById('mistakeCount').style.display = 'block';
   document.getElementById('playContainer').style.display = 'none';
   document.getElementById('reset').style.display = 'block';
   document.getElementById('refresh').style.display = 'block';
   document.getElementById('sudokuContainer').style.display = 'block';
+
+  mistake = 0;
+  document.getElementById('mistakeCount').innerHTML = 'Mistake: '+mistake+' / 5';
 
   var sdk = document.getElementById('mySuduko');
   sdk.innerHTML = '';
@@ -204,6 +210,14 @@ function numberTyped(i, j, elmId){
     elmId.style.color = 'black';
   } else {
     // fail
+    mistake++;
+    document.getElementById('mistakeCount').innerHTML = 'Mistake: '+mistake+' / 5';
+    if(mistake  >= 5 || mistake <= 0){
+      // document.getElementById('mistakeCount').innerHTML = 'Mistake: '+mistake+' / 5';
+      alert('Maximum mistake limit reached. Refreshing Suduko !!!');
+      refreshPressed();
+    }
+    
     elmId.style.color = 'red';
   }
 }
