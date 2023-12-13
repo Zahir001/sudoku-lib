@@ -237,7 +237,8 @@ function updateBackgroundAndInputs(elm){
   }
 }
 
-function showDetailHighlited(elem){
+function showDetailHighlited(i, j){
+  var elem = document.getElementById('sudukoItem_'+i+'_'+j);
   if(elem.style.background == 'white'){
     elem.style.background = 'lightgray';
   }
@@ -250,18 +251,17 @@ function showHighlited() {
   var cId = parseIndexFromID(activeElm.id);
 
   for(let i = 0; i < 9; i++){
-    var elem = document.getElementById('sudukoItem_'+cId[0]+'_'+i);
-    showDetailHighlited(elem);
-
-    elem = document.getElementById('sudukoItem_'+i+'_'+cId[1]);
-    showDetailHighlited(elem);
+    //rows
+    showDetailHighlited(cId[0], i);
+    //columns
+    showDetailHighlited(i, cId[1]);
 
     var r = cId[0] / 3;
     r = parseInt(r) * 3;
     var c = cId[1] / 3;
     c = parseInt(c) * 3;
-    elem = document.getElementById('sudukoItem_'+(r+parseInt(i/3))+'_'+(c+(i%3)));
-    showDetailHighlited(elem);
+    //3x3 box
+    showDetailHighlited(r+parseInt(i/3), c+(i%3));
   }
 }
 function itemClicked(i, j, elm){
