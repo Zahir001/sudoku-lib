@@ -1,5 +1,10 @@
-html{
-  background: darkcyan;
+html {
+  background: rgb(173, 210, 224);
+  font-family: 'Poppins';
+}
+
+body {
+  font-family: 'Poppins';
 }
 
 .sudoku {
@@ -29,10 +34,12 @@ html{
   width: 40px;
   height: 40px;
   text-align: center;
+  font-size: 22px;
+  font-family: 'Poppins';
 }
 
 .sudokuContainer {
-  margin-top: 100px;
+  margin-top: 34px;
 }
 
 #mySuduko {
@@ -45,59 +52,152 @@ html{
   place-content: center;
   border-radius: 12px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-  rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-  rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 /* home page css start here */
-.homeParent{
+.homeParent {
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 100vh;
-  width: 35%;
+  width: 25%;
   margin: auto;
 }
-.homeParentChild{
+
+.homeParentChild {
   display: flex;
+  align-items: center;
 }
 
-#gameContainer{
+.homeParentChild span,
+.homeParentChild select {
+  width: 50%;
+  padding-left: 14px;
+}
+
+#gameContainer {
   display: none;
 }
 
-#buttonsContainer{
+#buttonsContainer {
   text-align: center;
 }
-@media only screen and  (max-width:400px) {
-  #mySuduko{
+
+.mistakeDesign {
+  text-align: center;
+  font-size: 16px;
+}
+.gameContainer{
+  padding-top: 60px;
+}
+
+.playButton {
+  padding: 10px 8px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 22px;
+  font-size: 16px;
+  font-family: 'Poppins';
+  background-color: #307DF6;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+.selectLevel {
+  padding: 10px 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Poppins';
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  column-gap: 12px;
+}
+
+.button-container button {
+  padding: 12px 10px;
+  width: 9em;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0px 8px 16px 0px rgba(242, 68, 100, 0.10);
+  font-size: 16px;
+  font-family: 'Poppins';
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  column-gap: 3px;
+  margin-top: 14px;
+}
+
+.buttonGroup button {
+  font-size: 22px;
+  font-family: 'Poppins';
+  width: 52px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0px 8px 16px 0px rgba(242, 68, 100, 0.10);
+}
+
+@media only screen and (max-width:400px) {
+  #mySuduko {
     width: 85%;
     grid-template-columns: repeat(9, 1fr);
   }
+
   .sudoku_child_item {
     width: 7vw;
     height: 7vw;
   }
+  .homeParent {
+    width: 80%;
+  }
 }
 
-@media only screen and  (min-width: 400px) and (max-width:768px) {
-  #mySuduko{
+@media only screen and (min-width: 400px) and (max-width:768px) {
+  #mySuduko {
     width: 85%;
     grid-template-columns: repeat(9, 1fr);
   }
+
+  .sudoku_child_item {
+    width: 8vw;
+    height: 8vw;
+  }
+
+  .homeParent {
+    width: 68%;
+  }
+  .gameContainer{
+    padding-top: 10px;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width:1200px) {
+  #mySuduko {
+    width: 80%;
+    grid-template-columns: repeat(9, 1fr);
+  }
+
   .sudoku_child_item {
     width: 8vw;
     height: 8vw;
   }
 }
 
-@media only screen and  (min-width: 768px) and (max-width:1200px) {
-  #mySuduko{
-    width: 80%;
-    grid-template-columns: repeat(9, 1fr);
-  }
-  .sudoku_child_item {
-    width: 8vw;
-    height: 8vw;
-  }
+.userDetails {
+  font-size: 16px;
+  padding: 15px;
+}
+
+#output {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 10px;
+  column-gap: 10px;
 }
