@@ -318,7 +318,7 @@ function erasePressed() {
   updateBackgroundAndInputs();
 }
 
-window.addEventListener("load", function(){
+window.addEventListener("load", function () {
   getAPIData();
 });
 
