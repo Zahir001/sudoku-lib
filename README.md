@@ -1,3 +1,3 @@
 sudoku
 
-[Play here](https://zahir001.github.io/sudoku-lib/)
+[Play here](https://zahir001.github.io/sudoku-lib/){:target="_blank"}
