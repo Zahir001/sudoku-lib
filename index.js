@@ -4,9 +4,11 @@ var question;
 var answer;
 var mistake;
 var reqNumber;
+
 var activeElm;
 var activeI;
 var activeJ;
+var isNotesActive;
 
 // Backend Logic
 
@@ -165,7 +167,8 @@ function resetPressed() {
 }
 
 function loadSudukoUI() {
-  activeElm = null
+  activeElm = null;
+  isNotesActive = false;
 
   document.getElementById('menuContainer').style.display = 'none';
   document.getElementById('gameContainer').style.display = 'block';
@@ -193,7 +196,15 @@ function loadSudukoUI() {
       }
 
       var elmId = 'sudukoItem_' + i + '_' + j;
-      sdk.innerHTML += '<input id="' + elmId + '" class="sudoku_child_item" type="tel" style="' + style + '" value="' + num + '" maxlength="1" readonly onclick="itemClicked(' + i + ',' + j + ',' + elmId + ')">';
+      var innHtml = '<div class="sudokuItemContainer"><div class="notesContainer">';
+      for (let ind = 0; ind < 4; ind++) {
+        var noteId = 'notesItem_' + i + '_' + j + '_' + ind;
+        innHtml += '<span class="notesChild" id="' + noteId + '"></span>';
+      }
+      innHtml += '</div>';
+      innHtml += '<input id="' + elmId + '" class="sudoku_child_item" type="tel" style="' + style + '" value="' + num + '" maxlength="1" readonly onclick="itemClicked(' + i + ',' + j + ',' + elmId + ')">';
+      innHtml += '</div>';
+      sdk.innerHTML += innHtml;
     }
   }
 
@@ -272,12 +283,25 @@ function itemClicked(i, j, elm) {
 }
 
 function numberTyped(posV) {
+  // if none selected then return
   if (activeElm == null) {
     return
   }
+
+  // if already given selected, then return, do not change
   var cId = parseIndexFromID(activeElm.id);
   if (question[cId[0]][cId[1]] != 0) {
     return
+  }
+
+  // if notes enabled
+  if (isNotesActive) {
+    activeElm.value = '';
+    addNotes(posV);
+    return
+  } else {
+    // clear all notes for that element
+    clearNotes();
   }
 
   activeElm.value = posV;
@@ -286,7 +310,7 @@ function numberTyped(posV) {
     // success
     reqNumber--;
     activeElm.style.color = 'black';
-    if (reqNumber == 0) {
+    if (reqNumber <= 0) {
       alert('congratulation!!! Retuning to main menu.');
       resetPressed();
     }
@@ -295,21 +319,55 @@ function numberTyped(posV) {
     // fail
     mistake++;
     document.getElementById('mistakeCount').innerHTML = 'Mistake: ' + mistake + ' / 5';
+    activeElm.style.color = 'red';
     if (mistake >= 5 || mistake <= 0) {
-      // document.getElementById('mistakeCount').innerHTML = 'Mistake: '+mistake+' / 5';
       alert('Maximum mistake limit reached. Refreshing Suduko !!!');
       refreshPressed();
     }
-    activeElm.style.color = 'red';
+  }
+}
+
+function addNotes(posV) {
+  for (let i = 0; i < 4; i++) {
+    var noteId = 'notesItem_' + activeI + '_' + activeJ + '_' + i;
+    var nElm = document.getElementById(noteId);
+    if (nElm.innerHTML == '') {
+      // empty
+      nElm.innerHTML = posV;
+      break;
+    } else if (nElm.innerHTML == posV) {
+      // duplicate
+      break;
+    } else {
+      // filled
+      continue;
+    }
+  }
+}
+
+function clearNotes() {
+  for (let i = 0; i < 4; i++) {
+    var noteId = 'notesItem_' + activeI + '_' + activeJ + '_' + i;
+    var nElm = document.getElementById(noteId);
+    nElm.innerHTML = '';
   }
 }
 
 function erasePressed() {
+  // if none selected then return
   if (activeElm == null) {
     return
   }
+
+  // if already given selected, then return, do not change
   var cId = parseIndexFromID(activeElm.id);
   if (question[cId[0]][cId[1]] != 0) {
+    return
+  }
+
+  // if notes enabled
+  if (isNotesActive) {
+    eraseNotes();
     return
   }
 
@@ -318,41 +376,26 @@ function erasePressed() {
   updateBackgroundAndInputs();
 }
 
-window.addEventListener("load", function(){
-  getAPIData();
-});
+function eraseNotes() {
+  for (let i = 3; i >= 0; i--) {
+    var noteId = 'notesItem_' + activeI + '_' + activeJ + '_' + i;
+    var nElm = document.getElementById(noteId);
+    if (nElm.innerHTML == '') {
+      // empty
+      continue;
+    } else {
+      // if filled, then delete the last one only
+      nElm.innerHTML = '';
+      break;
+    }
+  }
+}
 
-
-// function getAPIData() {
-//   const apiUrl = 'https://jsonplaceholder.typicode.com/todos/';
-//   const outputElement = document.getElementById('output');
-
-//   fetch(apiUrl)
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       return response.json();
-//     })
-//     .then(data => {
-//       // Display data in an HTML element
-//       outputElement.innerHTML = '';
-//       // outputElement.textContent += JSON.stringify(data, null, 2);
-//       for (let i = 0; i < data.length; i++) {
-//         const element = data[i];
-//         var backClr = element["completed"] == true ? 'green' : 'yellow';
-
-//         var idElm = '';
-//         if (element["completed"] == true){
-//           idElm = '';
-//         } else {
-//           idElm = ', userID:'+element["userId"]+', id:'+element["id"];
-//         }
-
-//         outputElement.innerHTML += '<div class="userDetails" style="background: '+backClr+';">'+element["title"]+idElm+'</div>';
-//       }
-//     })
-//     .catch(error => {
-//       console.log('Error:' + error);
-//     });
-// }
+function notesPressed(noteElm) {
+  isNotesActive = !isNotesActive
+  if (isNotesActive) {
+    noteElm.style.background = '#307DF6';
+  } else {
+    noteElm.style.background = 'white';
+  }
+}
