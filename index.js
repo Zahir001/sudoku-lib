@@ -337,6 +337,7 @@ function addNotes(posV) {
       break;
     } else if (nElm.innerHTML == posV) {
       // duplicate
+      nElm.innerHTML = '';
       break;
     } else {
       // filled
@@ -365,13 +366,11 @@ function erasePressed() {
     return
   }
 
-  // if notes enabled
-  if (isNotesActive) {
-    eraseNotes();
-    return
-  }
+  // erase last Notes if available
+  eraseNotes();
 
-  activeElm.value = ''
+  // erase element value
+  activeElm.value = '';
 
   updateBackgroundAndInputs();
 }
